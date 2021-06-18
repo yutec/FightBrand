@@ -97,7 +97,7 @@ The analysis results are generated in multiple steps by the program files organi
 
 ### 1. Module `dataprep`
 
-Within this folder, Stata scripts build from sources the dataset for analysis. The do-script files must be executed in the following order. 
+Within this folder, Stata scripts build from sources the dataset for analysis. Before getting started, the external packages can be installed by executing the Stat do-script file `0config.do` first. Then, the do-script files must be executed in the following order. 
 
 1. merge: Merge all raw source files into Stata format
 2. clean: Clean up the dataset and define variables
