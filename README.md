@@ -35,7 +35,7 @@ The replication process requires a single local machine operating Linux/Mac OS w
 Optionally for Julia IDE, the user is advised to use Atom. Visual Studio Code is not supported due to unresolved file IO and library path issues. 
 
 1. Stata
-  - Install the following Stata packages using `ssc install packagename`:
+  - Install the following Stata packages by running `0config.do`:
   - `carryforward` 
   - `ivreg2`
   - `unique`
