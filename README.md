@@ -1,5 +1,7 @@
 This document describes the production codes used for the manuscript "***Market Entry, Fighting Brands and Tacit Collusion: Evidence from the French Mobile Telecommunications Market***" by Marc Bourreau, Yutec Sun and Frank Verboven.
 
+
+
 ## Data sources
 
 1. Kantar
@@ -28,6 +30,8 @@ This document describes the production codes used for the manuscript "***Market 
 4. OECD data on fighting brands
  - This contains the entry years of low-cost brands across OECD countries within folder `data/oecd`. The data were manually compiled from various publicly accessible sources. The source locations and links are documented in the accompanying file "low_cost_subsidiary_brands.docx" within the same folder where the raw data and Stata codes for processing the file are also provided.
 
+
+
 ## System requirement
 
 The replication process requires a single local machine operating Linux/Mac OS with Stata 14.2, Julia 1.6.0, Matlab 2019, and a Unix-like shell equivalent to Bash. In Linux, 1 gigabytes of memory and 10 gigabytes of disk space would be sufficient. Total computation takes about 2 days with 40 CPU cores in our system. Without parallelization, multithreading is the default option for Julia, but it is inefficient and might take up to 2-3 months in our crude estimation. Extra flag options, shell scripts, and system configuration must be provided for cluster systems to run the Julia codes. Microsoft Windows is not guaranteed to work with the Julia replication code, and it is the user's responsibility to ensure seamless execution. 
@@ -50,6 +54,8 @@ Optionally for Julia IDE, the user is advised to use Atom. Visual Studio Code is
 
 3. Matlab (optional)
  - For generating Latin hypercube pseudorandom numbers for estimation and simulation, we use Matlab's lhsnorm procedure. The files are provided in the replication package. 
+
+
 
 ## Workflow 
 
@@ -83,6 +89,8 @@ We provide a step-by-step description on how the results were produced for the m
 
 This completes the steps. 
 
+
+
 ## Warning before getting started
 
 The replication workflow proceeds in multiple stages, where each stage relies on the outputs from the previous stage. In the estimation and simulation using Julia, the program selects the best among multiple estimation runs of the previous stage, but this selection is determined by human intervention. 
@@ -90,6 +98,8 @@ The replication workflow proceeds in multiple stages, where each stage relies on
 The replication process is programmed to follow the pre-determined sequence of which estimates to select. Since the pre-selection relies on the same file inputs of random numbers as supplied with the code package, it is critical for the user to update the programs to make correct selection when using different data or random numbers. 
 
 In our implementation, the Stata codes exhibit random behevior during the data-cleaning process (steps 1 and 2 within Module `dataprep`), which generates the file `dataProcessed802.dta`. Hence, the user must use the same output `dataProcessed802.dta` to consistently obtain the correct results in the subsequent stages. 
+
+
 
 ## Program structure
 
@@ -210,11 +220,13 @@ Each instance does not need large memory (about 1GBs of memory would work). The 
 #### 2. main.jl
 This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the command-line console. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (mainMulti.jl). It takes as input the file "sim824.jld" in the original path. 
 
+
+
 ## Continuous-updating optimal IV
+
 For the BLP demand estimation, this paper uses the continuous-updating version of the optimal IV approach based on Reynaert and Verboven (Journal of Econometrics, 2014). The procedure is implemented by the `optimIV!` function within `Estim.jl` of the **estim** module. The rest of the main computations for the GMM estimation is performed by `Estim.jl` as well.
 
-## Further information
-The main computing environment was a locally accessed system of Intel Xeon E5-4627 v4 (40 cores) under Debian 4.9 with Julia 1.6 and Stata 1.4. The post-estimation results were generated in Mac OS 11.2.3 (Big Sur). 
+
 
 ## Tables
 
