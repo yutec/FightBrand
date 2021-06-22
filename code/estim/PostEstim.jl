@@ -82,8 +82,10 @@ function MonteCarloIncome(
       y975[j,k] = quantile(inc[j,k,:],0.975)
     end
   end
-  @printf("Average Income by Subscribers of Product Lines\n")
-  display("text/plain",yAvg)
+  if lowB==false
+    @printf("Average Income by Subscribers of Product Lines\n")
+    display("text/plain",yAvg)
+  end
   return yAvg, y025, y975
 end
 
