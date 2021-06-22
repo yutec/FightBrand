@@ -1,11 +1,4 @@
 # FightBrand
-<<<<<<< Updated upstream
-=======
-
-This repository contains program codes for replicating the analysis of "***Market Entry, Fighting Brands and Tacit Collusion: Evidence from the French Mobile Telecommunications Market***" by Marc Bourreau, Yutec Sun and Frank Verboven.
-
-Below is the description of the program codes and input data, with guideline for the replication process.
->>>>>>> Stashed changes
 
 This repository contains program codes for replicating the analysis of the article "***Market Entry, Fighting Brands and Tacit Collusion: Evidence from the French Mobile Telecommunications Market***" by Marc Bourreau, Yutec Sun and Frank Verboven.
 
