@@ -223,16 +223,16 @@ It performs 200 Monte Carlo simulations for all 16 possible equilibria. Each CPU
 
 	julia -p 40 -O3 mainMulti.jl
 
-Each instance does not need large memory (about 1GBs of memory would work). The output "sim824.jld" is exported, for example, to subfolder `output/dat824/m15/mc0/b1/`, where m15 is model ID for the RC logit demand specification, mc0 for the default wholesale marginal cost of MVNOs, b1 for the 1st 200 batch of the Monte Carlo (v1 for vertical integration model). For details, see readData function in Helper.jl. 
+Each instance does not need large memory (about 1GBs of memory would work). The output `sim824.jld` is exported, for example, to subfolder `output/dat824/m15/mc0/b1/`, where m15 is model ID for the RC logit demand specification, mc0 for the default wholesale marginal cost of MVNOs, b1 for the 1st 200 batch of the Monte Carlo (v1 for vertical integration model). For details, see "readData" function in `Helper.jl`. 
 
 #### 2. mainMulti2.jl
 
-This file performs the same simulation analysis as mainMulti.jl only for different model ("model=0"). It runs by command:
+This file performs the same simulation analysis as `mainMulti.jl` only for different model ("model=0"). It runs by command:
 
 	julia -p 40 -O3 mainMulti2.jl
 
 #### 3. main.jl
-This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the command-line console. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (mainMulti.jl). It takes as input the file `sim824.jld` in the original path. 
+This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the command-line console. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (`mainMulti.jl`). It takes as input the file `sim824.jld` in the original path. 
 
 ```
 julia -O3 main.jl 2>&1 | tee -a log.txt
@@ -316,4 +316,5 @@ The following table lists the location of codes exporting the figures shown in t
 |        |            |            | 13 (Figure 4b) | fig4b.pdf  |
 | A1     | 6plots.do  | dataprep   | 52             | price2.pdf |
 
-For Figure 4, the Stata code `figure4.do` imports input data `crosscountry.dta` that was manually entered based on the table "Entries per year" in the enclosed Excel file `table low cost brands.xlsx`" All the raw data and their sources are in the same folder `data/oecd`. 
+For Figure 4, the Stata code `figure4.do` imports input data `crosscountry.dta` that was manually entered based on the table "Entries per year" in the enclosed Excel file `table low cost brands.xlsx` All the raw data and their sources are in the same folder `data/oecd`. 
+
