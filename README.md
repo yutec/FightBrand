@@ -87,8 +87,8 @@ We provide a step-by-step description on how the results were produced for the m
  - `cp estim/out/base/m0s0opt200/*.csv sim/input/dat824/m0/`
  - `cp estim/out/base/m15s0opt200/*.csv sim/input/dat824/m15/`
 14. Go to `code/sim`
-15. Run `julia -O3 -p 40 mainMulti.jl`. It usually takes about 8 hours on 40 cores. 
-16. Run again `julia -O3 -p 40 mainMulti.jl` with parameters changed to `model=0` and `mcid=20` inside `mainMulti.jl`. 
+15. Run `julia -O3 -p 40 mainMulti.jl`. With 40 CPU cores, this step usually takes about 8-10 hours. 
+16. Run `julia -O3 -p 40 mainMulti2.jl`.
 17. Run `julia -O3 main.jl`. 
 
 This completes the steps. 
@@ -195,6 +195,14 @@ The program exports the estimation results into CSV files to be imported to Libr
 - Table A.17
 - Table A.2 (only in screen output)
 
+To record the screen output in cluster, one may alternatively execute:
+
+```
+julia -O3 main.jl 2>&1 | tee -a log.txt
+```
+
+ This allows us to store all the screen outputs into file "log.txt" while all the messages are still displayed on the console screen. Since the screen reports long list of progress indicators, it is recommended to use this command when running on cluster. 
+
 #### 3. swtest.do
 The Stata script performs the Sanderson-Windmeijer test under subfolder "post/testIV/mXX" where XX denotes model ID code. It takes as input the CSV files named "swtest_xxx.csv" (xxx is a tag identifier) under subfolder "out", which are exported by testIV! function in main.jl. 
 
@@ -221,7 +229,13 @@ It performs 200 Monte Carlo simulations for all 16 possible equilibria. Each CPU
 
 Each instance does not need large memory (about 1GBs of memory would work). The output "sim824.jld" is exported, for example, to subfolder "output/dat824/m15/mc0/b1/", where m15 is model ID for the RC logit demand specification, mc0 for the default wholesale marginal cost of MVNOs, b1 for the 1st 200 batch of the Monte Carlo (v1 for vertical integration model). For details, see readData function in Helper.jl. 
 
-#### 2. main.jl
+#### 2. mainMulti2.jl
+
+This file performs the same simulation analysis as mainMulti.jl only for different model ("model=0"). It runs by command:
+
+	julia -p 40 -O3 mainMulti2.jl
+
+#### 3. main.jl
 This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the command-line console. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (mainMulti.jl). It takes as input the file "sim824.jld" in the original path. 
 
 
