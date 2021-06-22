@@ -103,7 +103,7 @@ Hence, the replication process follows the pre-determined sequence based on the 
 
 The Stata codes exhibit random behevior during the data-cleaning process (steps 1 and 2 within Module `dataprep`) for generating the file `dataProcessed802.dta`. Hence, it is required to use the same file `dataProcessed802.dta` to ensure the replication to perform correctly every time. 
 
-Some tables may show slight discrepancy depending on the version of Stata. For example, Stata 14 and 17 were found to generate different results for Table A.2. 
+Different Stata versions may cause discrepancy in some tables. For example, Stata 14 and 17 were found to generate different results for Table A.2. 
 
 
 
@@ -316,4 +316,4 @@ The following table lists the location of codes exporting the figures shown in t
 |        |            |            | 13 (Figure 4b) | fig4b.pdf  |
 | A1     | 6plots.do  | dataprep   | 52             | price2.pdf |
 
-For Figure 4, the Stata code (figure4.do) imports input data "crosscountry.dta" that was manually entered based on the table "Entries per year" in the enclosed Excel file "table low cost brands.xlsx." All the raw data and their sources are in the same folder "data/oecd." 
+For Figure 4, the Stata code `figure4.do` imports input data `crosscountry.dta` that was manually entered based on the table "Entries per year" in the enclosed Excel file `table low cost brands.xlsx`" All the raw data and their sources are in the same folder `data/oecd`. 
