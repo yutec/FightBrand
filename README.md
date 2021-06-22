@@ -91,7 +91,7 @@ We provide a step-by-step description on how the results were produced for the m
 16. Run `julia -O3 -p 40 mainMulti2.jl`.
 17. Run `julia -O3 main.jl`. 
 
-This completes the steps. 
+This completes the replication process. 
 
 
 
@@ -187,7 +187,7 @@ Estimating model 29 (Line 29 in `mainMulti.jl`) alone takes about 30 hours when 
 #### 2. main.jl
 This generates main estimation tables for the manuscript and input files for the weak IV tests, using the estimation results obtained in Step 1. It also exports input files for the Monte Carlo simulation in the next step. All the output files are exported to corresponding subfolders under `out`. Excecute by running:
 
-	julia -O3 main.jl
+	julia -O3 main.jl 2>&1 | tee -a log.txt
 
 The program exports the estimation results into CSV files to be imported to LibreOffice for print-friendly format. The list includes:
 - The remaining columns in Tables 4 & A.1 
@@ -195,13 +195,7 @@ The program exports the estimation results into CSV files to be imported to Libr
 - Table A.17
 - Table A.2 (only in screen output)
 
-To record the screen output in cluster, one may alternatively execute:
-
-```
-julia -O3 main.jl 2>&1 | tee -a log.txt
-```
-
- This allows us to store all the screen outputs into file "log.txt" while all the messages are still displayed on the console screen. Since the screen reports long list of progress indicators, it is recommended to use this command when running on cluster. 
+When the excecution is complete, file `log.txt` stores all the screen outputs, among which Table A.2 can be found.  
 
 #### 3. swtest.do
 The Stata script performs the Sanderson-Windmeijer test under subfolder "post/testIV/mXX" where XX denotes model ID code. It takes as input the CSV files named "swtest_xxx.csv" (xxx is a tag identifier) under subfolder "out", which are exported by testIV! function in main.jl. 
@@ -236,9 +230,13 @@ This file performs the same simulation analysis as mainMulti.jl only for differe
 	julia -p 40 -O3 mainMulti2.jl
 
 #### 3. main.jl
-This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the command-line console. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (mainMulti.jl). It takes as input the file "sim824.jld" in the original path. 
+This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the command-line console. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (mainMulti.jl). It takes as input the file `sim824.jld` in the original path. 
 
+```
+julia -O3 main.jl 2>&1 | tee -a log.txt
+```
 
+As before, the tables displayed on the screen can be retrieved from file `log.txt`.
 
 ## Continuous-updating optimal IV
 
