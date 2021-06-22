@@ -26,7 +26,7 @@ Below is the description of the program codes and input data, with guideline for
 	4. `DEPTINSE.csv`
 
 2. ANFR
- - The dataset on cellular networks was originally provided by Agence Nationale des Fréquences (ANFR) under the non-disclosure agreement. Later it became publicly accessible at https://data.anfr.fr through the government's open data policy. Go to menu "DONNEES" => "Données sur les réseaux mobiles" => "Export" to find the data file ("fichier plat"). Our dataset may contain some discrepancy with the public version. The ANFR dataset is under `data/anfr` folder.
+ - The dataset on cellular networks was originally provided by Agence Nationale des Fréquences (ANFR) under the non-disclosure agreement and therefore is not included in the repository. Nevertheless, the repository contains similar public data that later became available at https://data.anfr.fr through the government's open data policy. Go to menu "DONNEES" => "Données sur les réseaux mobiles" => "Export" to find the data file ("fichier plat"). This public dataset is believed to derive from the same source as our analysis data, although it is not guaranteed to produce the same results. The public ANFR dataset is under `data/anfr` folder. The enclosed R script `main.R` within the same directory converts the original data into csv file `anfr2016.csv` for Stata import, but the R script needs modification to work with the public data due to slightly different data structure. 
 
 3. Census
  - The 2012 population data came from Institut National de la Statistique et des Études Économiques (INSEE). The data is publicly available at https://www.insee.fr/fr/statistiques/2119585?sommaire=2119686. It can be found at `data/pre2014/population.csv`.
