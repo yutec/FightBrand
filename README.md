@@ -1,4 +1,11 @@
 # FightBrand
+<<<<<<< Updated upstream
+=======
+
+This repository contains program codes for replicating the analysis of "***Market Entry, Fighting Brands and Tacit Collusion: Evidence from the French Mobile Telecommunications Market***" by Marc Bourreau, Yutec Sun and Frank Verboven.
+
+Below is the description of the program codes and input data, with guideline for the replication process.
+>>>>>>> Stashed changes
 
 This repository contains program codes for replicating the analysis of the article "***Market Entry, Fighting Brands and Tacit Collusion: Evidence from the French Mobile Telecommunications Market***" by Marc Bourreau, Yutec Sun and Frank Verboven.
 
@@ -271,12 +278,12 @@ The following table lists the location of source codes generating the tables in 
 |       |             |                       | 35 (M*1.5)                     | out/ms15/m15s0opt200/estimLatex.csv        |
 |       |             |                       | 36 (No Allownace)              | out/noAllow/m15s0opt200/estimLatex.csv     |
 |       |             |                       | 37 (Full sample)               | out/extra/m15s0opt200/estimLatex.csv       |
-| A16   | swtest.do   | estim/post/testIV/m0  | 7 (RC logit I-BLP)             | Screen                                     |
-|       |             |                       | 12 (RC logit I-Diff IV quad)   | Screen                                     |
-|       |             |                       | 17 (RC logit I-Diff IV local)  | Screen                                     |
-|       | swtest.do   | estim/post/testIV/m15 | 7 (RC logit II-BLP)            | Screen                                     |
-|       |             |                       | 12 (RC logit II-Diff quad)     | Screen                                     |
-|       |             |                       | 17 (RC logit II-Diff local)    | Screen                                     |
+| A16   | swtest.do   | estim/post/testIV/m0  | 7 (RC logit I-BLP)             | Screen (manually collected)                |
+|       |             |                       | 12 (RC logit I-Diff IV quad)   | Screen (manually collected)                |
+|       |             |                       | 17 (RC logit I-Diff IV local)  | Screen (manually collected)                |
+|       | swtest.do   | estim/post/testIV/m15 | 7 (RC logit II-BLP)            | Screen (manually collected)                |
+|       |             |                       | 12 (RC logit II-Diff quad)     | Screen (manually collected)                |
+|       |             |                       | 17 (RC logit II-Diff local)    | Screen (manually collected)                |
 | A17   | main.jl     | estim                 | 40 (RC logit I-BLP)            | out/base/m0s2blp200/estimLatex.csv         |
 |       |             |                       | 41 (RC logit I-Diff quad)      | out/base/m0s2diff-quad200/estimLatex.csv   |
 |       |             |                       | 42 (RC logit I-Diff local)     | out/base/m0s2diff-local200/estimLatex.csv  |
