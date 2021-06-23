@@ -42,7 +42,9 @@ For analysis, the complete set of data are assumed to be located in two folders:
 
 ## System requirement
 
-The replication process requires a single local machine operating Linux/Mac OS with Stata 14.2, Julia 1.6.0, Matlab 2019, and a Unix-like shell equivalent to Bash. In Linux, 1 gigabytes of memory and 10 gigabytes of disk space would be sufficient. Total computation takes about 2 days with 40 CPU cores in our system. Without parallelization, multithreading is the default option for Julia and could take up to 2-3 months in our crude projection. Custom flag options, shell scripts, and system configuration must be provided for cluster systems to run the Julia codes. Microsoft Windows is not guaranteed to work with the Julia replication code, and it is the user's responsibility to ensure seamless execution. 
+The replication process requires a single local machine operating Linux/Mac OS with Stata 14.2, Julia 1.6.0, Matlab 2019, and a Unix-like shell equivalent to Bash. In Linux, 1 gigabytes of memory and 10 gigabytes of disk space would be sufficient. Total computation takes about 2 days with 40 CPU cores in our system. Absent parallelization, multithreading is the default option for Julia and could take up to 2-3 months in our crude projection. 
+
+Extra flag options, shell scripts, and system configuration may be required for cluster systems. Microsoft Windows is not guaranteed to work with the Julia replication code, and it is the user's responsibility to ensure seamless execution. 
 
 Optionally for Julia IDE, the user is advised to use Atom. Visual Studio Code is not supported due to unresolved file IO and library path issues. 
 
@@ -126,7 +128,7 @@ Within this folder, Stata scripts build from sources the dataset for analysis. B
 7. estim.extra: the version of estim implemented for the full sample
 8. export.extra: the full-sample version of export
 
-The generated dataset may vary each time steps 1 and 2 are executed. For consistent and correct replication, it is necessary to use the same output `dataProcessed802.dta` as described earlier. For the complete list of tables produced by this module, see the section **Tables** below. 
+The generated dataset may vary each time steps 1 and 2 are executed. For consistent and exact replication, it is necessary to use the same output `dataProcessed802.dta` as described earlier. For the complete list of tables produced by this module, see the section **Tables** below. 
 
 The script file `5export.do` exports the following csv files for estimation in Step 2:
 - `demand824.csv`: consumer demand and sample identifiers for the main model
@@ -145,6 +147,8 @@ This folder contains Julia program files for random coefficients logit demand es
 
 In addition to the above CSV data files, the estimation needs input files for random draws simulated by external program. We used Matlab's lhsnorm to generate Latin hypercupe samples from normal distribution. The file names must be consistent with the dimension of the random coefficients distribution and the number of simulation draws. Matlab codes used for random number generation are `sampleDraws.m` and `simDraw.m`. They are included within the directory `~/work/kantar/brand/workfiles/simdraws` where the input random number files are also located. 
 
+For selecting the global optimum of GMM estimation, the Julia codes assume that the user will provide the input "mcid" for the estiamtion procedure "gmmOptimMulti!" within `mainMulti.jl` for the two-stage estimators. The parameter "mcid" chooses which Monte Carlo estimate to use as the global optimum, and it is manually selected by the prior knowledge of the results. All sources of randomness are suppressed in Julia so that "mcid" does not need to be updated with each program run, **as long as the working data derive from the same Stata intermediary file `dataProcessed802.dta`**. 
+
 The program should run in the following steps.
 
 #### 1. mainMulti.jl
@@ -154,7 +158,7 @@ Estimate RC logit demand using various specifications & IV approaches from 20 st
 
 where 20 is the maximum number of CPUs for running each of the estimation runs from 20 starting points. More CPUs are redundant, and large memory is not required. In case of a program error, all the output messages on the screen can be found by inspecting the error log file `err.txt`.
 
-For PBS clusters, a sample job launching script looks as follows:
+To work with clusters, extra preparation is typically required. A sample script for launching job on PBS cluster looks as follows:
 
 	#!/bin/bash
 	#PBS -S /bin/bash
