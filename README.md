@@ -8,28 +8,32 @@ Below is the description of the program codes and input data, with guideline for
 
 ## Data sources
 
+The analysis data are collected from multiple sources, some of which are proprietary and thus not included in the repository. For information on the final analysis data, the Stata codebook file `codebook.txt` is available under directory `data`.
+
+For analysis, the complete set of data are assumed to be located in two folders: `data/pre2014` and `data/post2014`, as can be seen from the Stata do script `1merge.do` (more descriptions to follow).
+
 1. Kantar
  - The demand-side data was purchased from the Kantar Worldpanel (https://www.kantarworldpanel.com/global) under a non-disclosure agreement. For purchase inquiry, it is recommended to contact the Kantar UK director Tony Fitzpatrick (Tony.Fitzpatrick@KantarWorldpanel.com). It can take several months to negotiate data use agreements and gain access to the data. The authors will assist with any reasonable replication attempts for two years following publication.
- - The data for our analysis are located in two folders: `data/pre2014` and `data/post2014`.
- - The pre2014 data contain the following components:
+ - The pre2014 data contain the following samples collected during 2011-2013:
 	1. `France_Data.csv`: main consumer survey
 	2. `bill2.csv`: mobile tariff bills of each consumer categorized by ranges
 	3. `spend.csv`: mobile spending of each consumer
 	4. `PanelDemogs.csv`: consumer panel demographics
-	5. `PhoneList.csv`, PhoneListUpdate.csv: list of mobile phone devices
 	6. `deptINSEE1.csv`,` deptINSEE2.csv`, `deptINSEE3.csv`: geographic locations (departments) of consumer panel
 	7. `depts2011.txt`: code list of departments in France
  - The post2014 data augment the above with 2014 survey sample in similarly structure:
 	1. `FranceDatav2.csv`
 	2. `FrancePanelv2.csv`
-	3. `PhoneList.csv`
-	4. `DEPTINSE.csv`
+	3. `PhoneList.csv`: list of mobile phone devices
 
 2. ANFR
- - The dataset on cellular networks was originally provided by Agence Nationale des Fréquences (ANFR) under the non-disclosure agreement and therefore is not included in the repository. Nevertheless, the repository contains similar public data that later became available at https://data.anfr.fr through the government's open data policy. Go to menu "DONNEES" => "Données sur les réseaux mobiles" => "Export" to find the data file ("fichier plat"). This public dataset is believed to derive from the same source as our analysis data, although it is not guaranteed to produce the same results. The public ANFR dataset is under `data/anfr` folder. The enclosed R script `main.R` within the same directory converts the original data into csv file `anfr2016.csv` for Stata import, but the R script needs modification to work with the public data due to slightly different data structure. 
+ - The dataset on cellular networks was provided by Agence Nationale des Fréquences (ANFR), who gave permission for the public sharing. It is included in the directory `data/anfr`. An accompanying codebook is also available as file `documentation-cartoradio.pdf` in the same location. 
+ - The R script `main.R` in the same directory `data/anfr` converts the original data into csv file `anfr2016.csv` for Stata import. 
+ - For analysis, the data file `anfr2016.csv` is assumed to be located under `data/post2014`.
 
 3. Census
- - The 2012 population data came from Institut National de la Statistique et des Études Économiques (INSEE). The data is publicly available at https://www.insee.fr/fr/statistiques/2119585?sommaire=2119686. It can be found at `data/pre2014/population.csv`.
+ - The 2012 population data came from Institut National de la Statistique et des Études Économiques (INSEE). The dataset is publicly available only in a table form at https://www.insee.fr/fr/statistiques/2119585?sommaire=2119686. The file is located at `data/insee/population.csv`. The accompanying file `remapRegion.csv` classifies the regions according to the new 2016 legislation, and it is manually coded.
+ - For analysis, `population.csv` is assumed to be located within `data/pre2014`, and  `remapRegion.csv` to be inside `data/post2014`.
 
 4. OECD data on fighting brands
  - This contains the entry years of low-cost brands across OECD countries within folder `data/oecd`. The data were manually compiled from various publicly accessible sources. The source locations and links are documented in the accompanying file `low_cost_subsidiary_brands.docx` within the same folder where the raw data and Stata codes for processing the file are also provided.
@@ -38,7 +42,7 @@ Below is the description of the program codes and input data, with guideline for
 
 ## System requirement
 
-The replication process requires a single local machine operating Linux/Mac OS with Stata 14.2, Julia 1.6.0, Matlab 2019, and a Unix-like shell equivalent to Bash. In Linux, 1 gigabytes of memory and 10 gigabytes of disk space would be sufficient. Total computation takes about 2 days with 40 CPU cores in our system. Without parallelization, multithreading is the default option for Julia, but it is inefficient and might take up to 2-3 months in our crude estimation. Extra flag options, shell scripts, and system configuration must be provided for cluster systems to run the Julia codes. Microsoft Windows is not guaranteed to work with the Julia replication code, and it is the user's responsibility to ensure seamless execution. 
+The replication process requires a single local machine operating Linux/Mac OS with Stata 14.2, Julia 1.6.0, Matlab 2019, and a Unix-like shell equivalent to Bash. In Linux, 1 gigabytes of memory and 10 gigabytes of disk space would be sufficient. Total computation takes about 2 days with 40 CPU cores in our system. Without parallelization, multithreading is the default option for Julia and could take up to 2-3 months in our crude projection. Custom flag options, shell scripts, and system configuration must be provided for cluster systems to run the Julia codes. Microsoft Windows is not guaranteed to work with the Julia replication code, and it is the user's responsibility to ensure seamless execution. 
 
 Optionally for Julia IDE, the user is advised to use Atom. Visual Studio Code is not supported due to unresolved file IO and library path issues. 
 
@@ -65,7 +69,7 @@ Optionally for Julia IDE, the user is advised to use Atom. Visual Studio Code is
 
 We provide a step-by-step description on how the results were produced for the manuscript. 
 
-1. Move `data` folder to `~/work/kantar/brand/data` (data not included).
+1. Move `data` folder to `~/work/kantar/brand/data` (some data not included).
 2. Create path `~/work/kantar/brand/work` for Stata outputs. 
 3. Create path `~/work/kantar/brand/workfiles` for Julia to import the csv files exported by Stata. 
 4. Execute Stata codes in `dataprep` folder. Follow the instruction below for details. 
@@ -97,19 +101,17 @@ This completes the replication process.
 
 ## Warnings before getting started
 
-The replication workflow proceeds in multiple stages. Throughout the estimation process, the Julia program selects the best result from the previous stage among multiple estimation runs, but this selection was manually determined. 
+The replication proceeds in multiple stages. During the process, the Julia program selects the best result from the previous stage among multiple trials, but this selection follows the pre-determined sequence based on the prior knowledge of the best estimates in each stage. When working with different data, random numbers, or numerical library, it is critical to update the pre-determined selection for correct replication. 
 
-Hence, the replication process follows the pre-determined sequence based on the prior knowledge of the best estimates in each stage. In case of any change of input data or random numbers, it is critical to update the programs to make correct selection when working with different data or random numbers. 
+The Stata codes exhibit randomness during the data-cleaning process (steps 1 and 2 within Module `dataprep`) for generating the file `dataProcessed802.dta`. As a result, the final sample size may vary each time the data is generated. To ensure the correct and consistent replication in later stages, it is required to use the same file `dataProcessed802.dta`. 
 
-The Stata codes exhibit random behevior during the data-cleaning process (steps 1 and 2 within Module `dataprep`) for generating the file `dataProcessed802.dta`. Hence, it is required to use the same file `dataProcessed802.dta` to ensure the replication to perform correctly every time. 
-
-Different Stata versions may cause discrepancy in some tables. For example, Stata 14 and 17 were found to generate different results for Table A.2. 
+Different Stata versions may also cause discrepancy in some tables. For example, Stata 14 and 17 were found to generate slightly different results for Table A.2. 
 
 
 
 ## Program structure
 
-The analysis results are generated in multiple steps by the program files organized by the corresponding folder structure.
+The analysis results are generated in in the following steps where the program files are organized by the corresponding folders.
 
 ### 1. Module `dataprep`
 
@@ -124,12 +126,12 @@ Within this folder, Stata scripts build from sources the dataset for analysis. B
 7. estim.extra: the version of estim implemented for the full sample
 8. export.extra: the full-sample version of export
 
-The generated dataset may vary slightly depending on the version of Stata due to differences in internal pseudo-random number generation mechanism. For consistent and correct replication, it is necessary to use the same output `dataProcessed802.dta` as described in the warning section above. For the compplete list of tables produced by this module, see the section **Tables** below. 
+The generated dataset may vary each time steps 1 and 2 are executed. For consistent and correct replication, it is necessary to use the same output `dataProcessed802.dta` as described earlier. For the complete list of tables produced by this module, see the section **Tables** below. 
 
-The script file `5export.do` exports the csv files for estimation in Step 2:
+The script file `5export.do` exports the following csv files for estimation in Step 2:
 - `demand824.csv`: consumer demand and sample identifiers for the main model
-- `demand824ms15.csv`: a version of demand824.csv where market size increased by 50%
-- `demand824NoAllow.csv`: a version of demand824.csv where sample is extended to 2011 Q1 without allowance variables
+- `demand824ms15.csv`: a variant of demand824.csv where market size increased by 50%
+- `demand824NoAllow.csv`: a variant of demand824.csv where sample is extended to 2011 Q1 without allowance variables
 - `Xinput824.csv`: product characteristics 
 - `ZinputBlp824.csv`,` ZinputBlp824core.csv`: inputs for BLP instruments 
 - `DiffIVinput824reduced.csv`,` DiffIVinput824reduced2.csv`: inputs for differentiation IVs
@@ -141,16 +143,18 @@ All the csv files are generated under `~/work/kantar/brand/work` by default. The
 
 This folder contains Julia program files for random coefficients logit demand estimations in the Unix-type shell environment. It also includes Stata scripts within subfolder `post/testIV` to perform weak IV tests. 
 
-In addition to the above CSV files, the estimation needs input files for random draws simulated by external program. We used Matlab's lhsnorm to generate Latin hypercupe samples from normal distribution. The file names must be consistent with the dimension of the random coefficients distribution and the number of simulation draws. Matlab codes used for random number generation are `sampleDraws.m` and `simDraw.m`. They are included within the directory `~/work/kantar/brand/workfiles/simdraws` where the input random number files are also located. 
+In addition to the above CSV data files, the estimation needs input files for random draws simulated by external program. We used Matlab's lhsnorm to generate Latin hypercupe samples from normal distribution. The file names must be consistent with the dimension of the random coefficients distribution and the number of simulation draws. Matlab codes used for random number generation are `sampleDraws.m` and `simDraw.m`. They are included within the directory `~/work/kantar/brand/workfiles/simdraws` where the input random number files are also located. 
 
 The program should run in the following steps.
 
 #### 1. mainMulti.jl
 Estimate RC logit demand using various specifications & IV approaches from 20 starting points. For acceleration, it is advised to use multiple processors by entering in the command shell:
 
-	julia -p 20 -O3 mainMulti.jl
+	julia -p 20 -O3 mainMulti.jl 2>&1 | tee -a err.txt
 
-where 20 is the maximum number of CPUs for running each of the estimation runs from 20 starting points. More CPUs are redundant, and large memory is not required. For PBS clusters, a sample job launch script looks as follows:
+where 20 is the maximum number of CPUs for running each of the estimation runs from 20 starting points. More CPUs are redundant, and large memory is not required. In case of a program error, all the output messages on the screen can be found by inspecting the error log file `err.txt`.
+
+For PBS clusters, a sample job launching script looks as follows:
 
 	#!/bin/bash
 	#PBS -S /bin/bash
@@ -182,12 +186,12 @@ where 20 is the maximum number of CPUs for running each of the estimation runs f
 	julia -O3 --machine-file $PBS_NODEFILE mainMulti.jl
 	echo "julia successfully finished"
 
-On alternative cluster, the user may have to follow similar procedure for the cluster to load library paths and worker nodes properly. For more information on troubleshooting cluster problems, consult with Julia documentations at https://docs.julialang.org/en/v1/stdlib/Distributed/. General information on Julia parallel computing is available at https://docs.julialang.org/en/v1/manual/distributed-computing/. 
+On alternative cluster, the user may have to follow similar procedure for the cluster to load library paths and add worker nodes properly. For more information on troubleshooting cluster problems, consult with Julia documentations at https://docs.julialang.org/en/v1/stdlib/Distributed/. General information on Julia parallel computing is available at https://docs.julialang.org/en/v1/manual/distributed-computing/. 
 
-Estimating model 29 (Line 29 in `mainMulti.jl`) alone takes about 30 hours when running on a 40-core Xeon E5-4627 v4 system. The rest of the lines may take about total 6-8 hours. To save time, it is advised to run estimations (especially Line 29) separately (by commenting out all other lines) while estimating other models in parallel.  
+Estimating model 29 (Line 29 in `mainMulti.jl`) alone takes about 30 hours when running on a 40-core Xeon E5-4627 v4 system. The rest of the lines may take about total 6-8 hours. 
 
 #### 2. main.jl
-This generates main estimation tables for the manuscript and input files for the weak IV tests, using the estimation results obtained in Step 1. It also exports input files for the Monte Carlo simulation in the next step. All the output files are exported to corresponding subfolders under `out`. Excecute by running:
+This generates main estimation tables for the manuscript and input files for the weak IV tests, using the estimation results obtained in Step 1. It also exports input files for the Monte Carlo simulation in the next step. All the output files are exported to corresponding subfolders within directory `out`. It can be executed by entering:
 
 	julia -O3 main.jl 2>&1 | tee -a log.txt
 
@@ -200,10 +204,19 @@ The program exports the estimation results into CSV files to be imported to Libr
 When the excecution is complete, file `log.txt` stores all the screen outputs, among which Table A.2 can be found.  
 
 #### 3. swtest.do
-The Stata script performs the Sanderson-Windmeijer test under subfolder `post/testIV/mXX` where XX denotes model ID code. It takes as input the CSV files named `swtest_xxx.csv` (xxx is a tag identifier) under the subfolder `out`, which are exported by "testIV!" function in `main.jl`. 
+The Stata script performs the Sanderson-Windmeijer test under folder `post/testIV/mXX` where XX denotes model ID code. First, the input CSV files  `swtest_xxx.csv` (xxx is a tag identifier) need to be placed in the same directory, which can be done by running the following commands on terminal:
 
-The output file is:
+ - `cp out/base/m0s2blp200/swtest_blp.csv post/testIV/m0/`
+ - `cp out/base/m0s2diff-quad200/swtest_diff-quad.csv post/testIV/m0/`
+ - `cp out/base/m0s2diff-local200/swtest_diff-local.csv post/testIV/m0/`
+ - `cp out/base/m15s2blp200/swtest_blp.csv post/testIV/m15/`
+ - `cp out/base/m15s2diff-quad200/swtest_diff-quad.csv post/testIV/m15/`
+ - `cp out/base/m15s2diff-local200/swtest_diff-local.csv post/testIV/m15/`
+
+The Stata script prints the results as screen outputs for the following table:
 - Tables A.16
+
+Since Tables A.16 reports only a few statistics from the output, the table is manually constructed. 
 
 #### 4. Summary of output files generated by module `Estim`
 All the estimation results are stored within a subfolder corresponding to each estimation specification under the output directory `out/`. 
@@ -216,29 +229,37 @@ All the estimation results are stored within a subfolder corresponding to each e
 
 ### 3. Module `sim`
 
-The Julia code under this folder produces Monte Carlo simulation results. It takes as input the CSV files exported from the estimation step, which must be copied to subfolder `input/dat824/mxx` where tag xx is the model identifier. 
+The Julia code in this folder produces Monte Carlo simulation results. It takes as input the CSV files exported from the `estim` module, which must be copied to subfolder `input/dat824/mxx` where tag xx is the model identifier. In the console, it can be done by entering:
+
+ - `cp estim/out/base/m0s0opt200/*.csv sim/input/dat824/m0/`
+ - `cp estim/out/base/m15s0opt200/*.csv sim/input/dat824/m15/`
 
 #### 1. mainMulti.jl
-It performs 200 Monte Carlo simulations for all 16 possible equilibria. Each CPU executes single Monte Carlo cycle out of the total 200 simulations. For example, we run on 40 CPUs by entering:
+This performs 200 Monte Carlo simulations. Each CPU executes single Monte Carlo cycle out of the total 200 simulations. For example, we can run on 40 CPUs by entering:
 
-	julia -p 40 -O3 mainMulti.jl
+	julia -p 40 -O3 mainMulti.jl 2>&1 | tee -a err.txt
 
-Each instance does not need large memory (about 1GBs of memory would work). The output `sim824.jld` is exported, for example, to subfolder `output/dat824/m15/mc0/b1/`, where m15 is model ID for the RC logit demand specification, mc0 for the default wholesale marginal cost of MVNOs, b1 for the 1st 200 batch of the Monte Carlo (v1 for vertical integration model). For details, see "readData" function in `Helper.jl`. 
+Each instance does not need large memory (about 1GBs of memory would suffice). All the scren outputs are stored in `err.txt` to store possible error messages as before. 
+
+This exports the simulation results as JLD file `sim824.jld` in a directory path where its name is structured as `output/dat824/m15/mc0/b1/`, where m15 is model ID for the RC logit demand specification, mc0 for the default wholesale marginal cost of MVNOs, b1 for the 1st 200 batch of the Monte Carlo (v1 for vertical integration model). For details, see the arguments of "readData" function in `Helper.jl`. 
 
 #### 2. mainMulti2.jl
 
-This file performs the same simulation analysis as `mainMulti.jl` only for different model ("model=0"). It runs by command:
+This file performs the same simulation as `mainMulti.jl`, but only for a different model ("model=0"). It can be run by entering command:
 
-	julia -p 40 -O3 mainMulti2.jl
+	julia -p 40 -O3 mainMulti2.jl 2>&1 | tee -a err2.txt
+
+The results are saved in the same JLD file `sim824.jld` in the directory named similarly as above. 
 
 #### 3. main.jl
-This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the command-line console. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (`mainMulti.jl`). It takes as input the file `sim824.jld` in the original path. 
+
+This post-simulation code generates all the remaining tables for the counterfactual exercises in the manuscript. Most outputs are printed in the console screen and are also saved in the log file `log.txt`. The large tables for diversion ratios and elasticities are exported as CSV files within the same subfolder as in the above (`mainMulti.jl`). It takes as input the file `sim824.jld` in the original path without need for copying. 
 
 ```
 julia -O3 main.jl 2>&1 | tee -a log.txt
 ```
 
-As before, the tables displayed on the screen can be retrieved from file `log.txt`.
+After the execution is complete, the tables can be retrieved from file `log.txt`.
 
 ## Continuous-updating optimal IV
 
