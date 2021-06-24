@@ -103,9 +103,9 @@ This completes the replication process.
 
 ## Warnings before getting started
 
-The replication proceeds in multiple stages. During the process, the Julia program selects the best result from the previous stage among multiple trials, but this selection follows the pre-determined sequence based on the prior knowledge of the best estimates in each stage. When working with different data, random numbers, or numerical library, it is critical to update the pre-determined selection for correct replication. 
+The replication proceeds in multiple stages. In the data-cleaning stage, Stata exhibits randomness during Steps 1 and 2 described in the following section **Module `dataprep`** where an intermediary file `dataProcessed802.dta` is generated. As a result, the sample size of the analysis data may vary each time the data is generated. For later stages, it is required to use the same file `dataProcessed802.dta` to ensure the successful replication. 
 
-The Stata codes exhibit randomness during the data-cleaning process (steps 1 and 2 within Module `dataprep`) for generating the file `dataProcessed802.dta`. As a result, the final sample size may vary each time the data is generated. To ensure the correct and consistent replication in later stages, it is required to use the same file `dataProcessed802.dta`. 
+For estimation, the Julia code selects the global optimum among multiple trials, often through multi-step process. And the final estimation results are entered as input for the counterfactual simulation. All of this  creates a sequential dependence throughout the entire replication process. The replication codes assume that the replication follows a sequence pre-determined by the prior knowledge of analysis results in each stage. Whenever this assumed chain is broken due to any change with data, random numbers, or numerical library, it is critical for the user to update it for correct replication. For details, see the discussion at the beginning of **Module `estim`** in Section **Program structure**.
 
 Different Stata versions may also cause discrepancy in some tables. For example, Stata 14 and 17 were found to generate slightly different results for Table A.2. 
 
@@ -265,10 +265,6 @@ julia -O3 main.jl 2>&1 | tee -a log.txt
 
 After the execution is complete, the tables can be retrieved from file `log.txt`.
 
-## Continuous-updating optimal IV
-
-For the BLP demand estimation, this paper uses the continuous-updating version of the optimal IV approach based on Reynaert and Verboven (Journal of Econometrics, 2014). The procedure is implemented by the `optimIV!` function within `Estim.jl` of the **estim** module. The rest of the main computations for the GMM estimation is performed by `Estim.jl` as well.
-
 
 
 ## Tables
@@ -342,4 +338,12 @@ The following table lists the location of codes exporting the figures shown in t
 | A1     | 6plots.do  | dataprep   | 52             | price2.pdf |
 
 For Figure 4, the Stata code `figure4.do` imports input data `crosscountry.dta` that was manually entered based on the table "Entries per year" in the enclosed Excel file `table low cost brands.xlsx` All the raw data and their sources are in the same folder `data/oecd`. 
+
+
+
+## Continuous-updating optimal IV
+
+For the BLP demand estimation, this paper uses the continuous-updating version of the optimal IV approach based on Reynaert and Verboven (Journal of Econometrics, 2014). The procedure is implemented by the `optimIV!` function within `Estim.jl` of the **estim** module. The rest of the main computations for the GMM estimation is performed by `Estim.jl` as well.
+
+
 
