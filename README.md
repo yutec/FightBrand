@@ -1,6 +1,6 @@
 # FightBrand
 
-This repository contains program codes for replicating the analysis of the article "***Market Entry, Fighting Brands and Tacit Collusion: Evidence from the French Mobile Telecommunications Market***" by Marc Bourreau, Yutec Sun and Frank Verboven.
+This repository contains program codes for replicating the analysis of the article "***Market Entry, Fighting Brands and Tacit Collusion: Evidence from the French Mobile Telecommunications Market***" by Marc Bourreau, Yutec Sun and Frank Verboven. The codebase is also available at GitHub repository: https://github.com/yutec/FightBrand.
 
 Below is the description of the program codes and input data, with guideline for the replication process. 
 
@@ -27,16 +27,16 @@ For analysis, the complete set of data are assumed to be located in two folders:
 	3. `PhoneList.csv`: list of mobile phone devices
 
 2. ANFR
- - The dataset on cellular networks was provided by Agence Nationale des Fréquences (ANFR), who gave permission for the public sharing. It is included in the directory `data/anfr`. An accompanying codebook is also available as file `documentation-cartoradio.pdf` in the same location. 
+ - The dataset on cellular networks was provided by Agence Nationale des Fréquences (ANFR), who gave permission for the public sharing. It is included in the directory `data/anfr`. An accompanying codebook is also available as file `documentation-cartoradio.pdf` in the same location. For data inquiry, the agency can be contacted via its website form "Formulaire contact - Données" (https://www.anfr.fr/contact/poser-une-question/formulaire-contact-donnees/#menu2), which is only available in French. 
  - The R script `main.R` in the same directory `data/anfr` converts the original data into csv file `anfr2016.csv` for Stata import. 
  - For analysis, the data file `anfr2016.csv` is assumed to be located under `data/post2014`.
 
 3. Census
- - The 2012 population data came from Institut National de la Statistique et des Études Économiques (INSEE). The dataset is publicly available only in a table form at https://www.insee.fr/fr/statistiques/2119585?sommaire=2119686. The file is located at `data/insee/population.csv`. The accompanying file `remapRegion.csv` classifies the regions according to the new 2016 legislation, and it is manually coded.
+ - The 2012 population data came from Institut National de la Statistique et des Études Économiques (INSEE). The population data were manually collected at the webpage (https://www.insee.fr/fr/statistiques/2119585?sommaire=2119686) from the table “Populations légales 2012” that has subtitle “Recensement de la population - Population des régions.” The hand-coded data file is located at `data/insee/population.csv` in the OPENICPSR repository (https://www.openicpsr.org/openicpsr/workspace?goToPath=/openicpsr/138921&goToLevel=project). The accompanying file `remapRegion.csv` classifies the regions according to the new 2016 legislation, and it is manually coded.
  - For analysis, `population.csv` is assumed to be located within `data/pre2014`, and  `remapRegion.csv` to be inside `data/post2014`.
 
 4. OECD data on fighting brands
- - This contains the entry years of low-cost brands across OECD countries within folder `data/oecd`. The data were manually compiled from various publicly accessible sources. The source locations and links are documented in the accompanying file `low_cost_subsidiary_brands.docx` within the same folder where the raw data and Stata codes for processing the file are also provided.
+ - This contains the entry years of low-cost brands across OECD countries within folder `data/oecd`. The data were manually compiled from various publicly accessible sources. The source locations and links are documented in the accompanying file `low_cost_subsidiary_brands.docx` within the same folder `data/oecd` at the OPENICPSR repository where the raw data and Stata codes for processing the file are also provided.
 
 
 
